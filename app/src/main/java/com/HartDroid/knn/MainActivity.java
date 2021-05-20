@@ -1,4 +1,4 @@
-//will my heart go on
+// title? will my heart go on
 package com.HartDroid.knn;
 
 import android.os.Bundle;
@@ -15,11 +15,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 public class MainActivity extends AppCompatActivity {
     TextView title = null;
@@ -34,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     HashMap<String,Double> map = new HashMap<>();
     List<String> lines = new ArrayList<>();
     List<People> dataset = new ArrayList<>();
-    int k =3;
+    int k =37;  //sqrt of 2201
 
 
     @Override
@@ -52,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         et2 = super.findViewById(R.id.et2);
         et3= super.findViewById(R.id.et3);
 
+        //attributes and their normalized numbers
         map.put("first",-0.923);
         map.put("second",0.0214);
         map.put("third",0.965);
@@ -64,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         map.put("no",1.0);
 
         try {
-            readFile();
+            readFile(dataset);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -81,23 +80,23 @@ public class MainActivity extends AppCompatActivity {
                 }
                 String classes = et.getText().toString().toLowerCase().trim();
                 if(!classes.trim().toLowerCase().equals("first")&&!classes.trim().toLowerCase().equals("second")&&!classes.trim().toLowerCase().equals("third")&&
-                        !classes.trim().toLowerCase().equals("crew")){
+                        !classes.trim().toLowerCase().equals("crew")&&!classes.isEmpty()){
                     et.setError("must match above");
 
                 }
                 double classesD = map.get(classes);
                 String age = et2.getText().toString().toLowerCase().trim();
-                if(!age.trim().toLowerCase().equals("adult")&&!age.trim().toLowerCase().equals("child")){
+                if(!age.trim().toLowerCase().equals("adult")&&!age.trim().toLowerCase().equals("child")&!classes.isEmpty()){
                     et2.setError("must match above");
                 }
                 double ageD = map.get(age);
                 String sex = et3.getText().toString().trim().toLowerCase();
-                if(!sex.trim().toLowerCase().equals("male")&&!sex.trim().toLowerCase().equals("female")){
+                if(!sex.trim().toLowerCase().equals("male")&&!sex.trim().toLowerCase().equals("female")&!classes.isEmpty()){
                     et3.setError("must match above");
                 }
                 double sexD = map.get(sex);
                 People query = new People(classesD,ageD,sexD,0);
-                Classify(query);
+                Classify(query, dataset);
 
 
 
@@ -106,33 +105,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected double euclideanDistance(People x, People y){
-      //  System.out.println(x.toString()+" "+y.toString());
         return (Math.sqrt((Math.pow((x.getClasses())-(y.getClasses()),2))+(Math.pow((x.getAge())-(y.getAge()),2))+
                 (Math.pow((x.getSex())-(y.getSex()),2))));
     }
-    protected void readFile() throws IOException {
+    protected void readFile(List<People> dataset) throws IOException {
         InputStream is = getResources().openRawResource(R.raw.titanic);
         BufferedReader buf = new BufferedReader(new InputStreamReader(is));
         String line;
         while((line =buf.readLine())!=null){
             if(line.contains("@")){
-                System.out.println(line +"avoid");
+                // System.out.println(line +"avoid");
             }
             else{
-                System.out.println(line);
+                // System.out.println(line);
                 String[] tokens = line.split(",");
                 Double[] attr = new Double[4];
                 for(int i=0; i<tokens.length;i++){
                     attr[i]= Double.parseDouble(tokens[i]);
                 }
-                dataset.add(new People(attr[0],attr[1],attr[2],attr[3]));
-                //lines.add(line);
+                People person = new People(attr[0],attr[1],attr[2],attr[3]);
+                System.out.println(person.toString());
+                dataset.add(person);
+                lines.add(line);
             }
         }
+
     }
-    protected void Classify(People query){
-        Collections.shuffle(dataset);
-        TreeMap<Double,People> distances = new TreeMap<>();
+    protected void Classify(People query,List<People> dataset){
+        //Collections.shuffle(dataset); shuffle for lower k?
+
+
+        List<People> distances = new ArrayList<>();
         List<People> neighbors = new ArrayList<>();
         int count=0;
         int survived=0;
@@ -143,26 +146,23 @@ public class MainActivity extends AppCompatActivity {
         else{
             for(People p: dataset){
                 double distance = euclideanDistance(p,query);
-                if(distances.containsKey(distance)||distances.containsKey(distance+=.000000000000000000000001)){
-                    distance+=.000000000000000000000001;
-                }
-                distances.put(distance,p);
+                p.setDistance(distance);
+                distances.add(p);
 
             }
+            System.out.println(distances.size());
 
+            distances.sort(Comparator.comparingDouble(People::getDistance));
 
-
-            for(Map.Entry<Double,People> entry: distances.entrySet()){
+            for(People p : distances){
                 if(count!=k){
-                    neighbors.add(entry.getValue());
+                    neighbors.add(p);
 
-                    System.out.println("Dead "+ entry.getValue().toString()+" Distance "+entry.getKey());
+                    System.out.println("Dead "+count+" "+ p.toString());
                     count++;
                 }
-                System.out.println(entry.getValue().toString()+" "+entry.getKey());
 
             }
-            System.out.println(map.size());
             for(People p: neighbors){
                 if(p.getSurvived()==-1.0)
                     survived++;
