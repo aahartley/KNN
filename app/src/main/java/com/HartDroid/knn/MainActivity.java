@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -130,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     protected void Classify(People query){
+        Collections.shuffle(dataset);
         TreeMap<Double,People> distances = new TreeMap<>();
         List<People> neighbors = new ArrayList<>();
         int count=0;
@@ -141,21 +143,26 @@ public class MainActivity extends AppCompatActivity {
         else{
             for(People p: dataset){
                 double distance = euclideanDistance(p,query);
-
+                if(distances.containsKey(distance)||distances.containsKey(distance+=.000000000000000000000001)){
+                    distance+=.000000000000000000000001;
+                }
                 distances.put(distance,p);
 
             }
+
 
 
             for(Map.Entry<Double,People> entry: distances.entrySet()){
                 if(count!=k){
                     neighbors.add(entry.getValue());
 
-                    System.out.println("Dead "+ entry.getValue().getSurvived()+" Distance "+entry.getKey());
+                    System.out.println("Dead "+ entry.getValue().toString()+" Distance "+entry.getKey());
                     count++;
                 }
+                System.out.println(entry.getValue().toString()+" "+entry.getKey());
 
             }
+            System.out.println(map.size());
             for(People p: neighbors){
                 if(p.getSurvived()==-1.0)
                     survived++;
