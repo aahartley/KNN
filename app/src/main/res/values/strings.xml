@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">KNN</string>
+    <string name="start">Start</string>
+    <string name="title">KNN Algorithm</string>
+    <string name="tV">Social Class (first,second,third,crew)</string>
+    <string name="tV2">Age (adult or child)</string>
+    <string name="tV3">Sex (male or female)</string>
+    <string name="kLarge">K is larger than the dataset</string>
+    <string name="live">You would probably survive</string>
+    <string name="die">You would probably not survive</string>
+
+
+</resources>
