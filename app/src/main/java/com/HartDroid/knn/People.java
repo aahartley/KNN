@@ -5,6 +5,7 @@ public class People {
     private double age;
     private double sex;
     private double survived;
+    private double distance;
 
     public People(double classes, double age, double sex,double survived){
         this.classes = classes;
@@ -44,7 +45,14 @@ public class People {
     public void setSurvived(double survived) {
         this.survived = survived;
     }
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
     public String toString(){
-        return classes+" "+age+" "+sex+" "+survived;
+        return classes+" "+age+" "+sex+" "+survived+" "+distance;
     }
 }
