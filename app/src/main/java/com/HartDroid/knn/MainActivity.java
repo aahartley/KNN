@@ -72,32 +72,34 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 System.out.println("clicked");
-                try  {
-                    InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+                try {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-                } catch (Exception e) {
+
+                    String classes = et.getText().toString().toLowerCase().trim();
+                    if (!classes.trim().toLowerCase().equals("first") && !classes.trim().toLowerCase().equals("second") && !classes.trim().toLowerCase().equals("third") &&
+                            !classes.trim().toLowerCase().equals("crew")) {
+                        et.setError("must match above");
+
+                    }
+
+                    double classesD = map.get(classes);
+                    String age = et2.getText().toString().toLowerCase().trim();
+                    if (!age.trim().toLowerCase().equals("adult") && !age.trim().toLowerCase().equals("child")) {
+                        et2.setError("must match above");
+                    }
+                    double ageD = map.get(age);
+                    String sex = et3.getText().toString().trim().toLowerCase();
+                    if (!sex.trim().toLowerCase().equals("male") && !sex.trim().toLowerCase().equals("female")) {
+                        et3.setError("must match above");
+
+                    }
+                    double sexD = map.get(sex);
+                    People query = new People(classesD, ageD, sexD, 0);
+                    Classify(query, dataset);
+                }catch (Exception e) {
 
                 }
-                String classes = et.getText().toString().toLowerCase().trim();
-                if(!classes.trim().toLowerCase().equals("first")&&!classes.trim().toLowerCase().equals("second")&&!classes.trim().toLowerCase().equals("third")&&
-                        !classes.trim().toLowerCase().equals("crew")&&!classes.isEmpty()){
-                    et.setError("must match above");
-
-                }
-                double classesD = map.get(classes);
-                String age = et2.getText().toString().toLowerCase().trim();
-                if(!age.trim().toLowerCase().equals("adult")&&!age.trim().toLowerCase().equals("child")&!classes.isEmpty()){
-                    et2.setError("must match above");
-                }
-                double ageD = map.get(age);
-                String sex = et3.getText().toString().trim().toLowerCase();
-                if(!sex.trim().toLowerCase().equals("male")&&!sex.trim().toLowerCase().equals("female")&!classes.isEmpty()){
-                    et3.setError("must match above");
-                }
-                double sexD = map.get(sex);
-                People query = new People(classesD,ageD,sexD,0);
-                Classify(query, dataset);
-
 
 
             }
