@@ -1,6 +1,7 @@
 // title? will my heart go on
 package com.HartDroid.knn;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -22,6 +23,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     TextView title = null;
     Button bt = null;
+    Button bt2=null;
     TextView tV =null;
     TextView tV2 =null;
     TextView tV3= null;
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     HashMap<String,Double> map = new HashMap<>();
     List<String> lines = new ArrayList<>();
     List<People> dataset = new ArrayList<>();
+    GraphView view;
     int k =37;  //sqrt of 2201
 
 
@@ -42,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         title = super.findViewById(R.id.title);
         bt = super.findViewById(R.id.bt);
+        bt2 = super.findViewById(R.id.bt2);
         tV = super.findViewById(R.id.tV);
         tV2 = super.findViewById(R.id.tV2);
         tV3= super.findViewById(R.id.tV3);
@@ -49,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         et = super.findViewById(R.id.et);
         et2 = super.findViewById(R.id.et2);
         et3= super.findViewById(R.id.et3);
+        view = super.findViewById(R.id.view);
 
         //attributes and their normalized numbers
         map.put("first",-0.923);
@@ -67,7 +72,9 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        bt2.setOnClickListener(v -> {
+            startNew();
+        });
         bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,6 +117,10 @@ public class MainActivity extends AppCompatActivity {
         return (Math.sqrt((Math.pow((x.getClasses())-(y.getClasses()),2))+(Math.pow((x.getAge())-(y.getAge()),2))+
                 (Math.pow((x.getSex())-(y.getSex()),2))));
     }
+    protected void startNew(){
+        Intent intent = new Intent(this,SecondActivity.class);
+        startActivity(intent);
+    }
     protected void readFile(List<People> dataset) throws IOException {
         InputStream is = getResources().openRawResource(R.raw.titanic);
         BufferedReader buf = new BufferedReader(new InputStreamReader(is));
@@ -136,7 +147,8 @@ public class MainActivity extends AppCompatActivity {
     protected void Classify(People query,List<People> dataset){
         //Collections.shuffle(dataset); shuffle for lower k?
 
-
+        view.setList(dataset);
+        view.setQuery(query);
         List<People> distances = new ArrayList<>();
         List<People> neighbors = new ArrayList<>();
         int count=0;

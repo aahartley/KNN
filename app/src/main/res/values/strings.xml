@@ -8,6 +8,14 @@
     <string name="kLarge">K is larger than the dataset</string>
     <string name="live">You would probably survive</string>
     <string name="die">You would probably not survive</string>
+    <string name="switch_to_touch">Switch to Touch</string>
+    <string name="predict">Predict</string>
+    <string name="reset">reset</string>
+    <string name="prediction_1">Prediction 1</string>
+    <string name="prediction_2">Prediction 2</string>
+    <string name="predict_x_and_y">Predict X and Y</string>
+    <string name="predict_x">Predict X</string>
+    <string name="predict_y">Predict Y</string>
 
 
 </resources>
