@@ -70,8 +70,21 @@ public class GraphView extends View {
 
 
             canvas.drawLine(0, getHeight() / 2.0f, getWidth(), getHeight() / 2.0f, paint);
+            canvas.drawLine(0,getHeight()/2.0f,25,getHeight()/2.0f+25,paint);
+            canvas.drawLine(0,getHeight()/2.0f,25,getHeight()/2.0f-25,paint);
+
+            canvas.drawLine(getWidth(),getHeight()/2.0f,getWidth()-25,getHeight()/2.0f+25,paint);
+            canvas.drawLine(getWidth(),getHeight()/2.0f,getWidth()-25,getHeight()/2.0f-25,paint);
+
             canvas.drawLine(getWidth() / 2.0f, 0, getWidth() / 2.0f, getHeight(), paint);
-            // System.out.println(getWidth() + " " + getHeight());
+            canvas.drawLine(getWidth()/2.0f-25,25,getWidth()/2.0f,0,paint);
+            canvas.drawLine(getWidth()/2.0f+25,25,getWidth()/2.0f,0,paint);
+            canvas.drawLine(getWidth()/2.0f-25,getHeight()-25,getWidth()/2.0f,getHeight(),paint);
+            canvas.drawLine(getWidth()/2.0f+25,getHeight()-25,getWidth()/2.0f,getHeight(),paint);
+            paint2.setTextSize(50.0f);
+            paint2.setColor(Color.RED);
+            canvas.drawText("X",getWidth()-30,getHeight()/2.0f-30,paint2);
+            canvas.drawText("Y",getWidth()/2.0f+30,30,paint2);
         }
     }
 

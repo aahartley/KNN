@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     TextView title = null;
     Button bt = null;
     Button bt2=null;
+    Button bt9=null;
     TextView tV =null;
     TextView tV2 =null;
     TextView tV3= null;
@@ -34,7 +35,9 @@ public class MainActivity extends AppCompatActivity {
     HashMap<String,Double> map = new HashMap<>();
     List<String> lines = new ArrayList<>();
     List<People> dataset = new ArrayList<>();
+    static List<String> allLines= new ArrayList<>();
     GraphView view;
+    Dataset dView = new Dataset();
     int k =37;  //sqrt of 2201
 
 
@@ -46,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         title = super.findViewById(R.id.title);
         bt = super.findViewById(R.id.bt);
         bt2 = super.findViewById(R.id.bt2);
+        bt9=super.findViewById(R.id.bt9);
         tV = super.findViewById(R.id.tV);
         tV2 = super.findViewById(R.id.tV2);
         tV3= super.findViewById(R.id.tV3);
@@ -72,6 +76,9 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        bt9.setOnClickListener(v -> {
+            startData();
+        });
         bt2.setOnClickListener(v -> {
             startNew();
         });
@@ -121,13 +128,20 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this,SecondActivity.class);
         startActivity(intent);
     }
-    protected void readFile(List<People> dataset) throws IOException {
+    protected void startData(){
+        System.out.println(allLines.size());
+
+        Intent intent = new Intent(this,Dataset.class);
+        startActivity(intent);
+    }
+    public void readFile(List<People> dataset) throws IOException {
         InputStream is = getResources().openRawResource(R.raw.titanic);
         BufferedReader buf = new BufferedReader(new InputStreamReader(is));
         String line;
         while((line =buf.readLine())!=null){
             if(line.contains("@")){
                 // System.out.println(line +"avoid");
+                allLines.add(line);
             }
             else{
                 // System.out.println(line);
@@ -140,9 +154,9 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println(person.toString());
                 dataset.add(person);
                 lines.add(line);
+                allLines.add(line);
             }
         }
-
     }
     protected void Classify(People query,List<People> dataset){
         //Collections.shuffle(dataset); shuffle for lower k?
