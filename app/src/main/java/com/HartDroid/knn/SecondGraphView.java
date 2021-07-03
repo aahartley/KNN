@@ -29,6 +29,7 @@ public class SecondGraphView extends View {
     private double touchX=0;
     private double touchY=0;
     private boolean touch=false;
+    private boolean drawNeighbor=false;
     Touch t;
     Touch guess;
     List<Touch> touches = new ArrayList<>();
@@ -37,6 +38,7 @@ public class SecondGraphView extends View {
     List<Touch> cluster1= new ArrayList<>();
     List<Touch> cluster2 = new ArrayList<>();
     List<Touch> cluster3 = new ArrayList<>();
+    List<Touch> neighbors = new ArrayList<>();
 
     public SecondGraphView(Context context) {
         super(context);
@@ -72,7 +74,7 @@ public class SecondGraphView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (erase){
-            canvas.drawColor(Color.WHITE);
+            canvas.drawColor(Color.GRAY);
             touches.clear();
             t=null;
             guess=null;
@@ -81,7 +83,9 @@ public class SecondGraphView extends View {
             cluster1.clear();
             cluster2.clear();
             cluster3.clear();
+            neighbors.clear();
             drawCluster=false;
+            drawNeighbor=false;
             smallestX=0;
             smallestY=0;
             canvas.drawLine(0, getHeight() / 2.0f, getWidth(), getHeight() / 2.0f, paint);
@@ -104,10 +108,10 @@ public class SecondGraphView extends View {
 
         }
         else {
-            //canvas.drawColor(Color.WHITE);
+            canvas.drawColor(Color.rgb(165,162,168));
             paint.setColor(Color.BLUE);
             paint.setStrokeWidth(5.0f);
-            paint2.setColor(Color.RED);
+            paint2.setColor(Color.rgb(255,251,8));
             paint2.setStrokeWidth(4.0f);
 
 
@@ -116,14 +120,14 @@ public class SecondGraphView extends View {
                     canvas.drawCircle((float)t.x, (float) t.y, 10.0f, paint2);
                 }
             }
-            if(drawCluster) {
+            if(!drawNeighbor) {
                 for (Touch t : cluster1) {
-                    paint2.setColor(Color.BLUE);
+                    paint2.setColor(Color.rgb(94,207,255));
                     System.out.println("drawing red dots" + t.toString());
                     canvas.drawCircle((float) (t.getX()), (float) (t.getY()), 10.0f, paint2);
                 }
                 for (Touch t : cluster2) {
-                    paint2.setColor(Color.RED);
+                    paint2.setColor(Color.rgb(168,19,19));
                     System.out.println("drawing blue dots" + t.toString());
                     canvas.drawCircle((float) (t.getX()), (float) (t.getY()), 10.0f, paint2);
                 }
@@ -135,16 +139,47 @@ public class SecondGraphView extends View {
                     }
                 }
             }
+            else{
+                System.out.println("DRAWING NEIGHBORRRSSSSSSS");
+                for (Touch t : cluster1) {
+                    paint2.setColor(Color.BLACK);
+                    System.out.println("drawing red dots" + t.toString());
+                    canvas.drawCircle((float) (t.getX()), (float) (t.getY()), 10.0f, paint2);
+                }
+                for (Touch t : cluster2) {
+                    paint2.setColor(Color.BLACK);
+                    System.out.println("drawing blue dots" + t.toString());
+                    canvas.drawCircle((float) (t.getX()), (float) (t.getY()), 10.0f, paint2);
+                }
+                if (!cluster3.isEmpty()) {
+                    for (Touch t : cluster3) {
+                        paint2.setColor(Color.BLACK);
+                        System.out.println("drawing green dots" + t.toString());
+                        canvas.drawCircle((float) (t.getX()), (float) (t.getY()), 10.0f, paint2);
+                    }
+                }
+            }
             if(t!=null){
-                paint2.setColor(Color.BLACK);
+                paint2.setColor(Color.rgb(236,24,240));
                 canvas.drawCircle((float)t.x, (float) t.y, 10.0f, paint2);
                 paint2.setColor(Color.RED);
 
             }
-            if(guess!=null){
-                paint2.setColor(Color.BLACK);
-                canvas.drawCircle((float) (getWidth() / 2.0f + guess.getX() ), (float) (getHeight() / 2.0f - guess.getY() ), 10.0f, paint2);
-                paint2.setColor(Color.RED);
+            if(!neighbors.isEmpty()&&drawNeighbor){
+
+                for(Touch t: neighbors){
+                    if(t.getLabel().equals("blue")){
+                        paint2.setColor(Color.rgb(94,207,255));
+                    }
+                    if(t.getLabel().equals("green")){
+                        paint2.setColor(Color.GREEN);
+                    }
+                    if(t.getLabel().equals("red")){
+                        paint2.setColor(Color.rgb(168,19,19));
+                    }
+                    canvas.drawCircle((float)t.x, (float) t.y, 10.0f, paint2);
+                    paint2.setColor(Color.RED);
+                }
             }
 
             canvas.drawLine(0, getHeight() / 2.0f, getWidth(), getHeight() / 2.0f, paint);
@@ -186,9 +221,17 @@ public class SecondGraphView extends View {
         this.cluster2 = cluster2;
         invalidate();
     }
+    protected void setCluster3List(List<Touch> cluster3){
+        this.cluster3 = cluster3;
+        invalidate();
+    }
 
     protected void setDrawCluster(){
         this.drawCluster = true;
+        invalidate();
+    }
+    protected void setDrawNeighbors(boolean drawNeighbor){
+        this.drawNeighbor = drawNeighbor;
         invalidate();
     }
     protected Touch getCluster1(){
@@ -197,11 +240,17 @@ public class SecondGraphView extends View {
     protected Touch getCluster2(){
         return touches.get(1);
     }
+    protected Touch getCluster3(){
+        return touches.get(2);
+    }
     protected void setQuery(Touch t){
         this.t = t;
         invalidate();
     }
-    protected void setGuess(Touch guess){this.guess=guess;invalidate();}
+    protected void setNeighbors(List<Touch> neighbors){
+        this.neighbors = neighbors;
+        invalidate();
+    }
 
 
 

@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         et = super.findViewById(R.id.et);
         et2 = super.findViewById(R.id.et2);
         et3= super.findViewById(R.id.et3);
-        view = super.findViewById(R.id.view);
+      //  view = super.findViewById(R.id.view);
 
         //attributes and their normalized numbers
         map.put("first",-0.923);
@@ -161,8 +161,8 @@ public class MainActivity extends AppCompatActivity {
     protected void Classify(People query,List<People> dataset){
         //Collections.shuffle(dataset); shuffle for lower k?
 
-        view.setList(dataset);
-        view.setQuery(query);
+      //  view.setList(dataset);
+       // view.setQuery(query);
         List<People> distances = new ArrayList<>();
         List<People> neighbors = new ArrayList<>();
         int count=0;
